@@ -1,0 +1,435 @@
+README for GVBOX v2.0      Froze: 12/21/1999.
+
+This install procedure requires that the directory 'packages' exist and
+contain all the software in *.tar.gz files.  The CD contains this directory,
+however, the ftp distribution does not.  The packages are distributed
+separately.  All are available via ftp://trmm.gsfc.nasa.gov/pub/software.
+Here is a complete list of packages:
+
+      HDF4.1r3.tar.gz
+      Xforms4Perl-0.8.4.tgz
+      build_zr_table-v1.5.tar.gz
+      bxform_linux-089-glibc2.1.tgz
+      bxform_linux-089.tgz
+      f2c.tar
+      f77
+      gdbm-1.7.3.tar.gz
+      gms-v1.6.tar.gz
+      gsl-v1.4.tar.gz
+      gv_metadata_tools-v1.4.tar.gz
+      gv_utils-v1.12.tar.gz
+      gvs-v4.15.tar.gz
+      gvs_gui-v1.8.tar.gz
+      gvs_production-v3.16.tar.gz
+      gvs_tools-v1.5.tar.gz
+      monitor_products-v1.3.tar.gz
+      monitorps-v1.9.tar.gz
+      netpbm-1mar1994.tar.gz
+      pbmplus.tgz
+      rsl-v1.26.tar.gz
+      sprint-v1.13.tar.gz
+      toolkit.r54.tar.gz
+
+
+INSTALLATION INSTRUCTIONS (see NOTES FOR CD INSTALL below):
+==============================================================================
+1. Install packages A though G, by hand.  These are needed for proper
+   installation of the GV software.  They are distributed with the 
+   gvbox tar file or CD.  You must have HDF installed prior to
+   installing TSDIS toolkit and you must have Xforms and gdbm installed prior
+   to installing GVBOX, the software of GVBOX is listed in a table below.
+   Installing GVBOX is accomplished by running 'install_everything'.
+ 
+   IF YOUR SYSTEM ALREADY HAS THESE PACKAGES INSTALLED, YOU SHOULD
+   REINSTALL THEM WHERE YOU PLAN TO INSTALL GVBOX.
+
+   The default install location is /usr/local/trmm/GVBOX and I recommend
+   you install them there.  But, you can specify any other directory.
+   Use the --prefix= option, for configure, to specify another directory.
+
+   A. HDF 4.3r1 (Required before installing GVBOX.)
+      I recommend you install this in /usr/local/trmm/GVBOX.  
+
+      Note: what ever directory you choose to install HDF,
+      ie. what you select via the --prefix= option, use that consistantly
+      throughout the remaining install.  All the configure scripts
+      of gvbox search the prefix directory, lib subdir, for libraries.
+      Therefore, you must install this package before installing GVBOX.
+
+   B. TSDIS toolkit 5.4 (Required before installing GVBOX.)
+      I recommend you install this in /usr/local/trmm/GVBOX
+      Un-tar the package there and create a symbolic link
+      'ln -s toolkit-5.4 toolkit'.  You, then should have
+      /usr/local/trmm/GVBOX/toolkit.  Then, copy
+      /usr/local/trmm/GVBOX/toolkit/lib/libtoolkit.a (and 
+      any .so files, if you made shared libs) to /usr/local/trmm/GVBOX/lib.
+
+      IMPORTANT: chmod -R 777 /usr/local/trmm/GVBOX/toolkit/config
+                 This makes the directory and all its files writable by
+                 everyone.  chmod 774 may be sufficient.
+
+      Note: what ever directory you choose to install, use that consistantly
+      throughout the remaining install.  The prefix I show above is
+      /usr/local/trmm/GVBOX.  All the configure scripts
+      of gvbox search the prefix directory, lib subdir, for libraries.
+      You must install this package before installing GVBOX.
+
+   C. Sprint (Required for GVBOX execution, install anytime.)
+      I recommend you install the sprint executable in 
+      /usr/local/trmm/GVBOX/bin.  There is only one thing built by
+      the sprint source, sprint.  You can simply copy that executable
+      to the bin directory.  Sprint may be installed at any time, but,
+      it is required when running level II gvs software: 2A-53-v4, 2A-54,
+      and 2A-55.
+
+   D. Xforms 0.89 (0.86 and up work.) (Optional)
+      I recommend you install this in /usr/local/trmm/GVBOX.
+      But, you can install it in /usr/local.  The configure
+      scripts check that location: /usr/X11/lib and /usr/X11R6/lib too.
+      Using the directory you specified as a --prefix= option is not
+      so important for this library.  Packages gvs_gui, gms, monitor_products,
+      build_zr_table require Xforms.  You must install this package
+      before installing those packages.
+      
+   E. Xforms4perl (Optional)
+      This can be installed afterwards. It is used by the build_zr_table gui.
+      You must install it in the default X11 location.  You'll need to
+      be root to do that.  This way perl can find the library.
+      Package build_zr_table requires Xforms4perl.
+
+   F. gdbm (Optional)
+      This may already be installed.  Check for libgdbm* in /usr/lib,
+      /usr/local/lib or even in /usr/local/trmm/GVBOX/lib (previous gvbox
+      install).  Nevertheless, this package must be installed prior to
+      installing gvbox.  Packages monitorps, gvs_gui and build_zr_table
+      depend on gdbm.
+
+   G. ImageMagik (Optional)
+      For making images by programs in gvs_tools.
+
+2. install_everything >& make.out
+
+   The default location is /usr/local/trmm/GVBOX.  You can change this
+   by specifying a new directory as the first parameter to
+   'install_everything'.  The first parameter is used in the
+   --prefix= option to all the configure scripts.  For example:
+
+         install_everything /develop/trmmgv/gvbox
+
+   Additionally, the script can take more parameters.  Each additional
+   parameter is the generic name of the package to install and the order
+   you list them is the order they'll be installed.  To install
+   gvs, gsl, and build_zr_table in the directory rooted at
+   /develop/trmmgv/gvbox, specify:
+
+         install_everything /develop/trmmgv/gvbox gvs gsl build_zr_table
+
+   The first parameter is a directory and it must exist.  If it does not
+   exist, or parameter begins with a '-', then a usage message is
+   printed.  For example:
+
+         install_everything -help
+         install_everything -junk
+         install_everything wifjw
+
+   are equivalent, show a usage message and exit.
+
+3. You should capture the output using '>& make.out', because it is
+   quite extensive, especially when you specify many packages to be installed.
+
+   Then, check 'make.out' to see if the installation was successful.
+   Searching for 'error' or 'ERROR' helps.
+
+4. Packages needed by various organizations are:
+
+                TSDIS: hdf, tsdistk, rsl, gv_utils, gvs.
+          PI's & JCET: hdf, tsdistk, rsl, gv_utils, gvs, gvs_production.
+     Gauge processing: hdf, tsdistk, rsl, gv_utils, gsl, build_zr_table.
+    Graphic interface: gvs_gui.
+       Job monitoring: monitorps, gms, monitor_products.
+             Optional: gvs_tools
+   
+   It is a good idea that the PI's and JCET use gvs_gui with provides
+   a graphical interface to 'all_tape_level_1n2' located in the 
+   gvs_production package.  The Job monitoring packages are completely
+   optional and if you cannot get them to install properly, then
+   don't worry about it.
+   
+   Here is the dependancy break down:
+
+   Package            Needs
+   -------------      -----------------
+   HDF                none
+   TSDIS toolkit      HDF
+   Sprint             none
+   rsl                TSDIS toolkit
+   gv_utils           rsl
+   gvs                gv_utils
+   gvs_tools          gdbm, Imagemagik
+   gvs_production     gvs
+   gv_metadata_tools  HDF
+   Xforms             none
+   Xforms4perl        Xforms
+   gvs_gui            Xforms, gdbm, gvs_production
+   monitorps          gdbm
+   gms                Xforms
+   monitor_products   Xforms
+   gsl                HDF
+   build_zr_table     Xforms4perl, HDF, gdbm, gsl
+   
+NOTES FOR CD INSTALL:
+
+The CD is a read only device.  The 'install_everything' needs a writable
+directory in which to work.  So, copy the packages directory, on the CD,
+to your hard drive and then run '/cdrom/install_everything'.
+
+The best way to copy everything is to use tar:
+
+cd /cdrom
+tar cf - packages | (cd /tmp; tar xf -)
+
+That will copy the packages directory to /tmp/packages.
+
+============================================================================
+
+EXECUTION NOTES:
+
+1. Have the install bin directory in your path.  Ex. 
+
+      set path = ($path /usr/local/trmm/GVBOX/bin)
+
+2. A. Add /usr/local/trmm/GVBOX/lib to LD_LIBRARY_PATH.  This is done with:
+
+          setenv LD_LIBRARY_PATH /usr/local/trmm/GVBOX/lib
+
+      If you already have LD_LIBRARY_PATH defined, you'll want to:
+
+          setenv LD_LIBRARY_PATH /usr/local/trmm/GVBOX/lib:$LD_LIBRARY_PATH
+
+   B. Or, you can have your sysadm modify /etc/ld.so.conf and add
+      /usr/local/trmm/GVBOX/lib to the list and rerun /sbin/ldconfig.
+      This must be done as 'root'.
+
+3. Be sure that everyone, who will be running gvs, has write permission
+   to $GVBOX_TOP_DIR/toolkit/config and every file in it.  You can
+   change the permission via:
+
+      chmod -R 777 /usr/local/trmm/GVBOX/toolkit/config
+
+4. setenv TSDISTK /usr/local/trmm/GVBOX/toolkit
+
+5. You must set the environment variable GVS_DATA_PATH to
+   be /usr/local/trmm/GVBOX/data.
+
+      setenv GVS_DATA_PATH /usr/local/trmm/GVBOX/data
+
+
+KNOWN PROBLEMS:
+---------------
+
+None.
+
+REQUIREMENTS:
+-------------
+1. Platform:  Linux and SGI. This software may work on other op/sys.
+
+2. The required GNU package(s) are available via ftp to ftp.uu.net.
+   The package(s) are:
+
+	perl -- Version 5.003 or higher.
+
+3. Compilers:  C++, C, and Fortran. GNU compilers are acceptable.
+   
+4. Disk space requirement (approximate figures) for building all packages that 
+   can be built by gvbox's Makefile: 
+     138M : The distributions, including the source files from each
+            package that will be built by gvbox's Makefile and the files 
+            created by this Makefile.
+	 55M  : The location for installation.
+
+==============================================================================
+This package contains all of the software for GV processing.  It includes:
+
+GVBOX Software:
+
+M   gms         1.6     - View gvs job status, live.
+M   gv_utils    1.12    - Ground Validation Utilities Software.
+M   gvs         4.15    - Ground Validation Software.
+M   gvs_gui     1.8     - Submit gvs jobs; select products for execution.
+M   gvs_tools   1.5     - Contains gdbm unix cmds and rrmap/csmap to pgm.
+M   gvs_production 3.16 - GVS production scheduling software.
+M   monitor_products 1.2- View products as they are generated from gvs.
+M   monitorps   1.8     - Communications deamon for monitoring gvs.
+M   rsl         1.26    - Radar Software Library.
+M   toolkit     5.4r1   - TSDIS toolkit library.
+M   hdf         4.1r3   - Hierarchical Data Format library.  4.0 is known
+                          to work but won't install on newer systems.
+    sprint      1.12    - NCAR SPRINT interpolator.
+    xforms      0.89    - Forms library.  Binary form, only.  Binaries
+                          for several architectures are provided.
+    cp8mm       1.2     - 8mm read/write programs.  For archival of products.
+    f2c         ???     - Fortran to C conversion.  Use the f77 script.
+                          g77 seems to work.
+    gdbm        1.7.3   - Gnu database manager.
+?   pbmplus     27sep91 - Extended Portable Bitmap Toolkit.
+A	ImageMagick 4.0     - Image processing tools.
+A   build_zr_table 1.5  - ZR table generation software.
+A   gsl         1.4     - Gauge Software Library.
+
+Legend:
+   A - Added    since GVBOX 1.4 release.
+   M - Modified since GVBOX 1.4 release.
+   D - Deleted  since GVBOX 1.4 release.
+
+Some software that is not supplied but you should have:
+
+    netscape    4.6     - Netscape, for viewing documentation.  Not supplied,
+                          as Mosaic and other WWW browsers will work.
+
+
+See the README files of the above packages for detail information.
+
+Software not installed can be found:
+
+What            Where
+-------         ---------------------------------------------------
+pbmplus         anonymous ftp to trmm.gsf.nasa.gov in pub/software
+netscape        http://home.netscape.com/comprod/mirror/client_download.html
+xforms          http://bragg.phys.uwm.edu/xforms
+
+
+
+Source directory hierarchy:
+--------------------------
+
+1. The directory packages/ contains HDF, TSDIS tookit, Xforms, and
+   the TRMM GV software including gvs.  They are stored as
+   compressed tar files.
+
+2. The program 'install_everything' will unpack each tar file one at
+   a time, excluding HDF, toolkit, xforms, and xform4perl all of which must
+   be installed prior to running 'install_everything', and attempt
+   to install it.  The install is via 'configure' and 'make install'.
+
+   You can specify the install directory (used to redefine the 
+   --prefix= option for all the confugure scripts.
+
+
+
+HOW DO I INTERPRET THE VERSION NUMBERING?
+-----------------------------------------
+
+GVBOX version numbering is simple.  There will be a maximum of 3 numbers
+(two dots) to specify the version number:  GVBOX x.y.z.  The x represents
+a major release number and when incremented y and z are set to 0.  The y
+represents a minor fix to any component of GVBOX and does not break anything
+new.  Incrementing y implies z is set to 0 (or '.z' is removed).
+When z is incremented, it represents a minor change and it could break
+something that previously worked.  Releasing GVBOX when z has be
+incremented will be avoided, however, it may be necessary to release
+GVBOX because of other important fixes.
+
+For example:
+
+GVBOX 1.0               - The first release; nothing new broken, of course.
+GVBOX 1.0.1             - Minor fix, but, something broke.
+GVBOX 1.0.2             - Minor fix, but, something is still broke, or
+                          something new broke.
+GVBOX 1.0.3             - Minor fix, but, something is still broke, or
+                          something new broke.
+GVBOX 1.1               - Minor fix, nothing new broke.  It is possible
+                          that something broken in 1.0.1, 1.0.2, or
+                          1.0.3 is still broken.
+GVBOX 2.0               - Major or many minor enhancements or fixes.
+
+
+
+    NASA/TRMM, Code 910.1.
+    This is the TRMM Office Ground Validation in a Box (GVBOX)
+    Copyright (C) 1997  John H. Merritt of Space Applications Corporation,
+                        a NASA/GSFC on-site contractor.
+                  and
+                        Thuy Nguyen of Science Systems and Applications Inc.
+                        Lanham, Maryland, a NASA/GSFC on-site contractor.
+
+	This copyright notice pertains only to the software that builds, ie.
+    compiles, the entire distribution, namely the file Makefile, for
+    the package GVBOX.  Software packages included in GVBOX may be 
+    covered under different copyrights and licenses.  Nearly all of
+    the software is free software.  Examine each package
+    for specific copyright and licensing details.
+
+    Otherwise, this program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+---------------------------------------------------------------------------
+XFORMS is bundled in GVBOX with the permission of its author, 
+Dr. T.C. Zhao.  Specifically, xforms is used only by the GUI programs:
+gvs and gms. It is included in binary form, only.  Here's what Dr. Zhao
+has to say regarding the use of XFORMS:
+
+	Permission to bundle xforms with GVBOX is hereby granted provided
+	that (a) use of xforms is acknowleged in Readme or About or
+	Help files and (b) it is understood that the bundled xforms is for 
+	running GVBOX or other public domain or copyrighted free software.
+	It does not grant commercial use of xforms to any parties involved,
+	including but not limited to NASA and receipient of your software.
+
+
+Notes on Shared Libraries:
+-------------------------
+Shared library configuration differs from system to system.  Here is the
+lowdown on getting them to work on the systems that support them.
+
+    a.  Linux 
+
+       There are two ways to have shared libraries available under linux:
+
+         1. Use the LD_LIBRARY_PATH environment variable.
+         2. Use ldconfig.
+
+       The second option is only available to those with superuser access, so
+       if you don't, or you specifically want to use the library that was just
+       built (for running the tests), use the LD_LIBRARY_PATH variable.  
+
+       The LD_LIBRARY_PATH variable is to contain a colon separated list of 
+       paths to be searched for shared libraries.  This variable is consulted 
+       before the information compiled by ldconfig, so even if you have lesstif 
+       already installed on your system you can use this variable to force the 
+       use of the newly built library.
+
+       An example setting for LD_LIBRARY_PATH:
+
+         $ LD_LIBRARY_PATH=/home/merritt/lib:/home/merritt/test/lib
+         $ export LD_LIBRARY_PATH
+
+       If you have superuser access and want lesstif to be installed for system-
+       wide use,  make sure the directory to which the libraries were installed 
+       is listed in /etc/ld.so.conf.  Then (as root) type 'ldconfig -v' to make 
+       them available.
+
+       If you're not sure which library is being used (either the system-wide
+       installed one, or one you've just compiled), use the 'ldd' command.  After
+       generating an executable linked dynamically with lesstif, type 
+       'ldd <executable-name>'.  This will output a list of the paths to all 
+       the shared libraries this executable depends on.
+
+
+                                 -- @ --
+
+QUESTIONS:
+----------
+
+Please contact AEAP/TRMM Office help via e-mail at help@trmm.gsfc.nasa.gov.
+
